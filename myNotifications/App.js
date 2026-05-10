@@ -23,7 +23,7 @@ const App = () => {
       })
       .catch(err => console.log('Error getting FCM token:', err));
 
-    // Handle foreground messages
+    // Handle foreground messages -> message that is displayed when app is opened and focused
     const unsubscribeForeground = messaging().onMessage(async remoteMessage => {
       console.log('Foreground notification received:', remoteMessage);
       setNotifications(prev => [
