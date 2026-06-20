@@ -7,6 +7,53 @@ import * as ImagePicker from 'expo-image-picker';
 
 const AddDIYHackScreen = ({ navigation }) => {
   //Add the code fo this screen here
+    const [title, setTitle] = useState('');
+    const [materialsRequired, setMaterialsRequired] = useState('');
+    const [instructions, setInstructions] = useState('');
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState('');
+
+      const handleSubmit = async () => {
+      if (title && materialsRequired && instructions) {
+        let materialsAsArr = materialsRequired.split('\n')
+        await addDoc(collection(db, "diyHacks"), {
+          title,
+          materialsAsArr,
+          instructions,
+          imageUrl
+        });
+        navigation.goBack();
+      } else {
+        alert("Please fill all fields");
+      }
+    };
+
+    return (
+      <ScrollView style={{ padding: 20 }}>
+        <Text style={styles.labelText}>Title</Text>
+        <TextInput style={styles.input} value={title} onChangeText={setTitle} placeholder="DIY Hack Title" />
+
+        <Text style={styles.labelText}>MaterialsRequired</Text>
+        <TextInput style={styles.textArea} value={materialsRequired} onChangeText={setMaterialsRequired} placeholder="Material 1..." multiline />
+
+        <Text style={styles.labelText}>Instructions</Text>
+        <TextInput style={styles.textArea} value={instructions} onChangeText={setInstructions} placeholder="Instructions" multiline />
+        <View style={{flexDirection:'row'}}>
+        <Text style={styles.labelText}>Image URL</Text>
+        <TextInput style={styles.urlinput} value={imageUrl} onChangeText={setImageUrl} placeholder="Enter Image URL" />
+        </View>
+        {imageUrl ? (
+          <View style={{justifyContent:'center',alignItems:'center'}}>
+            <Image source={{ uri: imageUrl }} style={styles.uploadedImage}  />
+          </View>
+        ) : null}
+        <View style={{justifyContent:'center', alignItems: 'center'}}>
+        <Pressable style={styles.button} onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Submit DIY Hack</Text>
+        </Pressable>
+        </View>
+      </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
